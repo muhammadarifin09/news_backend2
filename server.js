@@ -1,31 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Root endpoint
-app.get('/', (req, res) => {
-    res.json({ 
-        message: '🚀 News API Proxy on Vercel!',
-        endpoints: {
-            headlines: '/api/news',
-            all_news: '/api/everything'
-        }
-    });
-});
-
-// Headline news
+// Headline news - INDONESIA (untuk section "Berita Terkini")
 app.get('/api/news', async (req, res) => {
     try {
         const response = await axios.get('https://newsapi.org/v2/top-headlines', {
             params: {
-                country: 'us',
-                apiKey: process.env.NEWS_API_KEY || '078f337716074bb9aa1fb223b3268601'
+                country: 'id',  // ✅ BERITA INDONESIA
+                pageSize: 5,    // 5 berita utama Indonesia
+                apiKey: process.env.NEWS_API_KEY
             }
         });
         res.json(response.data);
@@ -34,13 +14,15 @@ app.get('/api/news', async (req, res) => {
     }
 });
 
-// All news
+// All news - INTERNASIONAL + INDONESIA (untuk section "Semua Berita")
 app.get('/api/everything', async (req, res) => {
     try {
         const response = await axios.get('https://newsapi.org/v2/everything', {
             params: {
-                q: 'technology',
-                apiKey: process.env.NEWS_API_KEY || '078f337716074bb9aa1fb223b3268601'
+                q: '(indonesia OR jakarta) (technology OR business OR sports OR health)',  // ✅ KOMBINASI
+                sortBy: 'publishedAt',
+                pageSize: 20,
+                apiKey: process.env.NEWS_API_KEY
             }
         });
         res.json(response.data);
@@ -49,5 +31,18 @@ app.get('/api/everything', async (req, res) => {
     }
 });
 
-// Export untuk Vercel
-module.exports = app;
+// Bonus: Endpoint khusus internasional
+app.get('/api/international', async (req, res) => {
+    try {
+        const response = await axios.get('https://newsapi.org/v2/top-headlines', {
+            params: {
+                country: 'us',  // ✅ BERITA INTERNASIONAL
+                pageSize: 10,
+                apiKey: process.env.NEWS_API_KEY
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
