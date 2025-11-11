@@ -1,7 +1,7 @@
 {
   "name": "news-backend",
   "version": "1.0.0",
-  "description": "Backend proxy untuk News App Mandiri",
+  "description": "Backend for Mandiri News App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -12,8 +12,5 @@
     "cors": "^2.8.5",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1"
-  },
-  "keywords": ["news", "api", "proxy"],
-  "author": "Your Name",
-  "license": "MIT"
+  }
 }
